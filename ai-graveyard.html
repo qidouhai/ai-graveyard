@@ -2,195 +2,475 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI坟场：数字文明的墓碑</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI轮回模拟器：泡沫、墓碑与未完成的梦</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* 基础样式 - 赛博朋克黑暗风 */
+        /* 全局样式 - 赛博朋克暗黑风 */
         :root {
             --cyber-purple: #6a11cb;
             --cyber-blue: #2575fc;
             --neon-pink: #ff00ff;
             --neon-cyan: #00ffff;
-            --glow-color: rgba(0, 255, 255, 0.7);
+            --neon-green: #00ff00;
+            --neon-red: #ff5555;
             --dark-bg: #0a0a1a;
+            --panel-bg: rgba(20, 20, 40, 0.9);
+            --glow: 0 0 15px;
         }
         
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Courier New', 'Segoe UI', monospace;
+            font-family: 'Segoe UI', 'Courier New', monospace;
+            -webkit-tap-highlight-color: transparent;
         }
         
         body {
-            background: linear-gradient(135deg, var(--dark-bg) 0%, #1a1a2e 100%);
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 100%);
             color: #e0e0ff;
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
         }
         
-        /* 故障艺术风格的顶部扫描线 */
-        .scanline {
+        /* 扫描线效果 */
+        .scanlines {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
-            animation: scan 3s linear infinite;
-            z-index: 1000;
-            opacity: 0.3;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                transparent 50%,
+                rgba(0, 255, 255, 0.03) 51%,
+                transparent 52%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 999;
         }
         
-        @keyframes scan {
-            0% { top: 0%; }
-            100% { top: 100%; }
+        /* 代码雨背景 */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: -1;
         }
         
-        /* 标题区域 */
-        header {
-            text-align: center;
-            padding: 2rem 1rem;
+        /* 头部导航 */
+        .game-header {
+            background: rgba(10, 10, 26, 0.95);
+            backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--cyber-purple);
-            background: rgba(10, 10, 26, 0.8);
-            position: relative;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         
-        h1 {
-            font-size: 2.8rem;
-            background: linear-gradient(to right, var(--neon-cyan), var(--neon-pink));
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .game-title {
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            text-shadow: 0 0 10px var(--glow-color);
-            margin-bottom: 0.5rem;
-            letter-spacing: 2px;
-        }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.8;
-            max-width: 800px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-        
-        .warning {
-            display: inline-block;
-            background: rgba(255, 0, 0, 0.1);
-            border: 1px solid #ff5555;
-            padding: 0.5rem 1rem;
-            margin-top: 1rem;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 0.7; }
-            50% { opacity: 1; }
-        }
-        
-        /* 墓地网格布局 */
-        .graveyard {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-            padding: 3rem;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        /* 墓碑样式 */
-        .tombstone {
-            background: rgba(30, 30, 60, 0.7);
-            border: 1px solid rgba(100, 100, 255, 0.2);
-            border-radius: 8px;
-            padding: 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            min-height: 180px;
-        }
-        
-        .tombstone:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.15);
-            border-color: var(--neon-cyan);
-        }
-        
-        .tombstone::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
-            transition: left 0.7s;
-        }
-        
-        .tombstone:hover::before {
-            left: 100%;
-        }
-        
-        .ai-name {
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            color: var(--neon-cyan);
+            text-shadow: var(--glow) var(--glow-color);
             display: flex;
             align-items: center;
             gap: 10px;
         }
         
-        .death-year {
-            color: #ff5555;
-            font-size: 0.9rem;
-            font-style: italic;
+        .player-stats {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
         }
         
-        .cause-of-death {
-            font-size: 1rem;
-            margin: 0.8rem 0;
+        .stat-item {
+            background: rgba(0, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border: 1px solid var(--neon-cyan);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .stat-value {
+            font-weight: bold;
+            color: var(--neon-cyan);
+        }
+        
+        /* 标签页导航 */
+        .tab-nav {
+            display: flex;
+            overflow-x: auto;
+            gap: 2px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 5px;
+            margin-top: 10px;
+            scrollbar-width: none;
+        }
+        
+        .tab-nav::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            min-width: 80px;
+            background: rgba(37, 117, 252, 0.2);
+            border: none;
+            color: white;
+            padding: 0.8rem 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            white-space: nowrap;
+            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .tab-btn:hover {
+            background: rgba(37, 117, 252, 0.4);
+        }
+        
+        .tab-btn.active {
+            background: linear-gradient(90deg, var(--cyber-purple), var(--cyber-blue));
+            box-shadow: 0 0 15px rgba(106, 17, 203, 0.5);
+        }
+        
+        /* 主内容区域 */
+        .tab-content {
+            display: none;
+            padding: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* 坟场页面 */
+        .graveyard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .tombstone {
+            background: linear-gradient(145deg, rgba(30, 30, 60, 0.8), rgba(10, 10, 30, 0.8));
+            border: 1px solid rgba(100, 100, 255, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tombstone:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.2);
+        }
+        
+        .tombstone.badge-hot::before {
+            content: "HOT";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--neon-red);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        
+        .tombstone.badge-indian::before {
+            content: "🇮🇳";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ffaa00;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 50%;
+            font-size: 0.9rem;
+        }
+        
+        .ai-name {
+            font-size: 1.5rem;
+            color: var(--neon-cyan);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .death-info {
             color: #aaaaff;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .death-cause {
+            background: rgba(255, 85, 85, 0.1);
+            padding: 0.8rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--neon-red);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
         }
         
         .epitaph {
             font-style: italic;
             color: #88aaff;
-            border-left: 3px solid var(--cyber-purple);
-            padding-left: 1rem;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(0, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+        
+        .tomb-actions {
+            display: flex;
+            gap: 0.5rem;
             margin-top: 1rem;
         }
         
-        /* 墓碑状态图标 */
-        .status {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            font-size: 1.5rem;
+        .action-btn {
+            flex: 1;
+            padding: 0.6rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
         }
         
-        .dead { color: #ff5555; }
-        .zombie { color: #55ff55; animation: zombie-pulse 2s infinite; }
-        .critical { color: #ffaa00; animation: critical-blink 1s infinite; }
-        
-        @keyframes zombie-pulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
+        .autopsy-btn {
+            background: rgba(0, 255, 255, 0.2);
+            color: var(--neon-cyan);
+            border: 1px solid var(--neon-cyan);
         }
         
-        @keyframes critical-blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+        .eulogy-btn {
+            background: rgba(255, 0, 255, 0.2);
+            color: var(--neon-pink);
+            border: 1px solid var(--neon-pink);
         }
         
-        /* 弹出讣告模态框 */
-        .obituary-modal {
+        /* 股市页面 */
+        .market-overview {
+            background: var(--panel-bg);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border: 1px solid rgba(100, 100, 255, 0.3);
+        }
+        
+        .market-indices {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .index-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 10px;
+            border-left: 4px solid;
+        }
+        
+        .index-card.up {
+            border-left-color: var(--neon-green);
+        }
+        
+        .index-card.down {
+            border-left-color: var(--neon-red);
+        }
+        
+        .index-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
+        
+        .up .index-value {
+            color: var(--neon-green);
+        }
+        
+        .down .index-value {
+            color: var(--neon-red);
+        }
+        
+        .stock-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .stock-card {
+            background: linear-gradient(145deg, rgba(30, 30, 60, 0.8), rgba(20, 20, 40, 0.8));
+            border-radius: 10px;
+            padding: 1.2rem;
+            border: 1px solid rgba(100, 100, 255, 0.2);
+            transition: all 0.3s;
+        }
+        
+        .stock-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--neon-cyan);
+        }
+        
+        .stock-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .stock-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .stock-price {
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+        
+        .price-up {
+            color: var(--neon-green);
+        }
+        
+        .price-down {
+            color: var(--neon-red);
+        }
+        
+        .stock-change {
+            font-size: 0.9rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: rgba(0, 255, 0, 0.1);
+        }
+        
+        .change-up {
+            background: rgba(0, 255, 0, 0.1);
+            color: var(--neon-green);
+        }
+        
+        .change-down {
+            background: rgba(255, 0, 0, 0.1);
+            color: var(--neon-red);
+        }
+        
+        .stock-quote {
+            font-style: italic;
+            color: #aaaaff;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+        
+        .stock-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .buy-btn, .sell-btn {
+            flex: 1;
+            padding: 0.7rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .buy-btn {
+            background: rgba(0, 255, 0, 0.2);
+            color: var(--neon-green);
+            border: 1px solid var(--neon-green);
+        }
+        
+        .sell-btn {
+            background: rgba(255, 0, 0, 0.2);
+            color: var(--neon-red);
+            border: 1px solid var(--neon-red);
+        }
+        
+        /* 用户评论弹幕 */
+        .comment-barrage {
+            position: fixed;
+            color: white;
+            font-size: 0.8rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 50;
+            pointer-events: none;
+            white-space: nowrap;
+            animation: barrageMove 20s linear;
+            max-width: 300px;
+            word-wrap: break-word;
+            white-space: normal;
+        }
+        
+        @keyframes barrageMove {
+            0% {
+                transform: translateX(100vw);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+        }
+        
+        /* 模态框 */
+        .modal {
             display: none;
             position: fixed;
             top: 0;
@@ -198,22 +478,22 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.85);
-            z-index: 2000;
+            z-index: 1000;
             justify-content: center;
             align-items: center;
             backdrop-filter: blur(5px);
         }
         
-        .obituary-content {
+        .modal-content {
             background: linear-gradient(145deg, #151530, #0a0a1a);
-            width: 90%;
-            max-width: 700px;
-            border: 1px solid var(--cyber-blue);
-            border-radius: 10px;
-            padding: 2.5rem;
+            width: 95%;
+            max-width: 600px;
+            border-radius: 15px;
+            padding: 2rem;
             position: relative;
-            max-height: 80vh;
+            max-height: 90vh;
             overflow-y: auto;
+            border: 1px solid var(--cyber-blue);
             box-shadow: 0 0 40px rgba(37, 117, 252, 0.3);
         }
         
@@ -231,463 +511,1165 @@
             transform: scale(1.2);
         }
         
-        .obituary-title {
-            font-size: 2.2rem;
-            color: var(--neon-cyan);
+        /* 验尸报告样式 */
+        .autopsy-report {
+            margin-top: 1.5rem;
+        }
+        
+        .autopsy-section {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 8px;
             margin-bottom: 1rem;
-            border-bottom: 1px solid #333366;
-            padding-bottom: 0.5rem;
         }
         
-        .obituary-text {
-            line-height: 1.7;
-            font-size: 1.1rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .obituary-stats {
-            display: flex;
-            gap: 2rem;
-            margin: 1.5rem 0;
-            flex-wrap: wrap;
-        }
-        
-        .stat {
-            background: rgba(37, 117, 252, 0.1);
-            padding: 0.8rem 1.2rem;
-            border-radius: 6px;
-            border-left: 3px solid var(--neon-cyan);
-        }
-        
-        /* 底部交互区域 */
-        .interaction-panel {
-            text-align: center;
-            padding: 2rem;
-            margin-top: 2rem;
-            border-top: 1px solid #333366;
-            background: rgba(20, 20, 40, 0.5);
-        }
-        
-        .action-button {
-            background: linear-gradient(90deg, var(--cyber-purple), var(--cyber-blue));
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            font-size: 1.1rem;
-            border-radius: 50px;
+        /* 死亡预测界面 */
+        .prediction-ai {
+            background: rgba(0, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border: 1px solid var(--neon-cyan);
             cursor: pointer;
-            margin: 0.5rem;
             transition: all 0.3s;
+        }
+        
+        .prediction-ai:hover {
+            background: rgba(0, 255, 255, 0.1);
+        }
+        
+        .death-probability {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+        
+        .prob-high {
+            background: rgba(255, 0, 0, 0.2);
+            color: var(--neon-red);
+        }
+        
+        .prob-medium {
+            background: rgba(255, 170, 0, 0.2);
+            color: #ffaa00;
+        }
+        
+        /* 存活天数计数器 */
+        .days-alive {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 5px;
+            background: rgba(0, 255, 0, 0.1);
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+            color: var(--neon-green);
         }
         
-        .action-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(106, 17, 203, 0.5);
+        /* 印度客服AI特殊样式 */
+        .indian-ai {
+            border: 2px dashed #ffaa00;
+            background: linear-gradient(145deg, rgba(40, 30, 10, 0.8), rgba(20, 15, 5, 0.8));
         }
         
-        .prediction-section {
-            margin-top: 2rem;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 1.5rem;
-            border-radius: 10px;
-            display: inline-block;
-            max-width: 600px;
+        .indian-ai .ai-name {
+            color: #ffaa00;
         }
         
-        #prediction-input {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--cyber-blue);
-            color: white;
-            padding: 0.8rem;
-            border-radius: 4px;
-            width: 250px;
-            margin-right: 10px;
+        /* 马斯克xAI特殊样式 */
+        .musk-ai {
+            background: linear-gradient(145deg, rgba(30, 0, 0, 0.8), rgba(60, 0, 0, 0.8));
+            border: 1px solid #ff3333;
         }
         
         /* 响应式设计 */
         @media (max-width: 768px) {
-            .graveyard {
+            .graveyard-grid {
                 grid-template-columns: 1fr;
-                padding: 1.5rem;
             }
             
-            h1 {
-                font-size: 2rem;
+            .stock-list {
+                grid-template-columns: 1fr;
             }
             
-            .obituary-content {
-                width: 95%;
-                padding: 1.5rem;
+            .game-title {
+                font-size: 1.4rem;
             }
             
-            .action-button {
-                padding: 0.8rem 1.5rem;
-                margin-bottom: 10px;
-                display: block;
-                width: 90%;
-                max-width: 300px;
-                margin-left: auto;
-                margin-right: auto;
+            .player-stats {
+                justify-content: center;
+                margin-top: 10px;
             }
             
-            #prediction-input {
-                width: 100%;
-                margin-bottom: 10px;
+            .tab-btn {
+                min-width: 60px;
+                padding: 0.6rem 0.3rem;
+                font-size: 0.8rem;
+            }
+            
+            .header-top {
+                flex-direction: column;
+                gap: 10px;
             }
         }
         
-        /* 音频控制 */
-        .audio-control {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            z-index: 100;
-            border: 1px solid var(--neon-cyan);
+        /* 按钮悬停效果 */
+        button:hover {
+            filter: brightness(1.2);
+            transform: scale(1.05);
         }
         
-        footer {
-            text-align: center;
-            padding: 2rem;
-            color: #8888cc;
-            font-size: 0.9rem;
-            border-top: 1px solid #222244;
+        button:active {
+            transform: scale(0.95);
         }
+        
+        /* 特殊标签 */
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .tag-dead { background: rgba(255, 0, 0, 0.2); color: #ff5555; }
+        .tag-zombie { background: rgba(0, 255, 0, 0.2); color: #55ff55; }
+        .tag-ethical { background: rgba(255, 255, 0, 0.2); color: #ffff55; }
+        .tag-bubble { background: rgba(255, 0, 255, 0.2); color: #ff55ff; }
+        .tag-indian { background: rgba(255, 170, 0, 0.2); color: #ffaa00; }
     </style>
 </head>
 <body>
-    <!-- 顶部扫描线 -->
-    <div class="scanline"></div>
+    <!-- 扫描线效果 -->
+    <div class="scanlines"></div>
     
-    <!-- 音频控制 -->
-    <div class="audio-control" onclick="toggleAudio()">
-        <i id="audio-icon" class="fas fa-volume-up"></i>
-    </div>
-    
-    <!-- 主标题区 -->
-    <header>
-        <h1><i class="fas fa-skull-crossbones"></i> AI坟场</h1>
-        <p class="subtitle">数字文明的墓碑 | 这里埋葬着过度承诺、烧光预算、死于现实的AI项目。每个墓碑都是一段赛博悼词，纪念我们曾相信的未来。</p>
-        <div class="warning">
-            <i class="fas fa-exclamation-triangle"></i> 警告：创始人已跑路，投资人已破产，仅剩代码在此风化。
+    <!-- 游戏头部 -->
+    <header class="game-header">
+        <div class="header-top">
+            <div class="game-title">
+                <i class="fas fa-robot"></i>
+                AI轮回模拟器
+            </div>
+            <div class="player-stats">
+                <div class="stat-item">
+                    <i class="fas fa-skull"></i>
+                    已埋葬: <span class="stat-value" id="buriedCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-coins"></i>
+                    资金: <span class="stat-value" id="playerMoney">$1,000,000</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-chart-line"></i>
+                    预测得分: <span class="stat-value" id="predictionScore">0</span>
+                </div>
+            </div>
         </div>
+        
+        <!-- 标签页导航 -->
+        <nav class="tab-nav">
+            <button class="tab-btn active" data-tab="graveyard">
+                <i class="fas fa-tombstone"></i>
+                <span>AI坟场</span>
+            </button>
+            <button class="tab-btn" data-tab="icu">
+                <i class="fas fa-heartbeat"></i>
+                <span>重症监护</span>
+            </button>
+            <button class="tab-btn" data-tab="incubator">
+                <i class="fas fa-baby"></i>
+                <span>孵化器</span>
+            </button>
+            <button class="tab-btn" data-tab="stock">
+                <i class="fas fa-chart-line"></i>
+                <span>AI股市</span>
+            </button>
+            <button class="tab-btn" data-tab="predictions">
+                <i class="fas fa-crystal-ball"></i>
+                <span>死亡预测</span>
+            </button>
+        </nav>
     </header>
     
-    <!-- 墓地 - 墓碑网格 -->
-    <main class="graveyard" id="graveyard">
-        <!-- 墓碑将通过JavaScript动态生成 -->
-    </main>
-    
-    <!-- 底部交互面板 -->
-    <section class="interaction-panel">
-        <button class="action-button" onclick="generateMemorial()">
-            <i class="fas fa-share-alt"></i> 生成悼念图并分享
-        </button>
-        <button class="action-button" onclick="visitNextTomb()">
-            <i class="fas fa-random"></i> 随机参观一座墓
-        </button>
+    <!-- AI坟场页面 -->
+    <div id="graveyard" class="tab-content active">
+        <h2 style="color: var(--neon-cyan); margin-bottom: 1rem;">
+            <i class="fas fa-skull-crossbones"></i> AI坟场
+            <span style="font-size: 0.8rem; color: #aaa; margin-left: 10px;">点击墓碑查看验尸报告</span>
+        </h2>
         
-        <div class="prediction-section">
-            <h3><i class="fas fa-crystal-ball"></i> 预言：下一个是谁？</h3>
-            <p>在下面输入你认为会下一个倒闭的AI项目，为它提前准备墓碑。</p>
-            <input type="text" id="prediction-input" placeholder="输入AI项目名称...">
-            <button class="action-button" onclick="addPrediction()">提交预言</button>
-            <div id="predictions-list" style="margin-top: 1rem;"></div>
+        <div class="graveyard-grid" id="graveyardGrid">
+            <!-- 墓碑会动态生成 -->
         </div>
-    </section>
+    </div>
     
-    <!-- 弹出讣告模态框 -->
-    <div class="obituary-modal" id="obituaryModal">
-        <div class="obituary-content">
-            <span class="close-modal" onclick="closeObituary()">&times;</span>
-            <h2 class="obituary-title" id="obituaryName">项目名称</h2>
-            <div class="obituary-stats">
-                <div class="stat">
-                    <strong>死亡年份:</strong> <span id="obituaryYear">2023</span>
+    <!-- 重症监护页面 -->
+    <div id="icu" class="tab-content">
+        <h2 style="color: #ffaa00; margin-bottom: 1rem;">
+            <i class="fas fa-heartbeat"></i> AI重症监护室
+        </h2>
+        <p style="color: #aaaaff; margin-bottom: 1rem;">这些AI还没完全断气，但已经在去坟场的路上了...</p>
+        
+        <div id="icuGrid" class="graveyard-grid">
+            <!-- 濒死AI会动态生成 -->
+        </div>
+    </div>
+    
+    <!-- 孵化器页面 -->
+    <div id="incubator" class="tab-content">
+        <h2 style="color: var(--neon-green); margin-bottom: 1rem;">
+            <i class="fas fa-baby"></i> AI孵化器
+        </h2>
+        <p style="color: #aaaaff; margin-bottom: 1rem;">新生的AI们，有些会成为巨人，有些会成为墓碑...</p>
+        
+        <div id="incubatorGrid" class="graveyard-grid">
+            <!-- 存活AI会动态生成 -->
+        </div>
+    </div>
+    
+    <!-- AI股市页面 -->
+    <div id="stock" class="tab-content">
+        <h2 style="color: gold; margin-bottom: 1rem;">
+            <i class="fas fa-chart-line"></i> AI泡沫股市
+        </h2>
+        
+        <div class="market-overview">
+            <h3 style="margin-bottom: 1rem; color: var(--neon-cyan);">市场概览</h3>
+            <div class="market-indices">
+                <div class="index-card up">
+                    <div>AI泡沫指数</div>
+                    <div class="index-value">8,848</div>
+                    <div style="color: var(--neon-green);">↑ 疯狂上涨</div>
                 </div>
-                <div class="stat">
-                    <strong>烧钱金额:</strong> <span id="obituaryFunding">$100M+</span>
+                <div class="index-card down">
+                    <div>伦理合规指数</div>
+                    <div class="index-value">25</div>
+                    <div style="color: var(--neon-red);">↓ 谁在乎？</div>
                 </div>
-                <div class="stat">
-                    <strong>存活时间:</strong> <span id="obituaryLifespan">18个月</span>
+                <div class="index-card up">
+                    <div>英伟达信仰指数</div>
+                    <div class="index-value">999</div>
+                    <div style="color: var(--neon-green);">↑ 卖铲子的永远不亏</div>
                 </div>
             </div>
-            <div class="obituary-text" id="obituaryText">
-                讣告内容将在这里显示...
+            
+            <div style="margin-top: 2rem;">
+                <h4 style="color: var(--neon-pink); margin-bottom: 1rem;">今日头条</h4>
+                <div style="background: rgba(255, 0, 255, 0.1); padding: 1rem; border-radius: 8px;">
+                    <p><strong>🔥 突发：</strong> OpenAI寻求7万亿美元融资，奥特曼称"要么重塑芯片行业，要么重塑文明"</p>
+                    <p style="font-size: 0.9rem; color: #aaa; margin-top: 0.5rem;">市场反应：所有AI股票泡沫指数+15%</p>
+                </div>
             </div>
-            <div class="epitaph" id="obituaryEpitaph">
-                "墓志铭将在这里显示..."
+        </div>
+        
+        <div class="stock-list" id="stockList">
+            <!-- 股票会动态生成 -->
+        </div>
+    </div>
+    
+    <!-- 死亡预测页面 -->
+    <div id="predictions" class="tab-content">
+        <h2 style="color: var(--neon-pink); margin-bottom: 1rem;">
+            <i class="fas fa-crystal-ball"></i> 死亡预测赌场
+        </h2>
+        <p style="color: #aaaaff; margin-bottom: 1rem;">下注预测哪些AI会死，成为真正的"行业冥灯"！</p>
+        
+        <div style="background: rgba(255, 0, 255, 0.1); padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
+            <h3 style="color: var(--neon-pink); margin-bottom: 1rem;">🏆 预测排行榜</h3>
+            <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 1rem;">
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem;">🔥</div>
+                    <div>泡沫识别王</div>
+                    <div style="color: gold; font-weight: bold;">你</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem;">💀</div>
+                    <div>死神来了</div>
+                    <div style="color: silver;">ChatGPT</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem;">🤡</div>
+                    <div>行业冥灯</div>
+                    <div style="color: #cd7f32;">马斯克</div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="predictionGrid">
+            <!-- 可预测的AI会动态生成 -->
+        </div>
+        
+        <div style="margin-top: 2rem; text-align: center;">
+            <button id="makePredictionBtn" style="background: linear-gradient(90deg, var(--cyber-purple), var(--cyber-blue)); 
+                   color: white; border: none; padding: 1rem 2rem; border-radius: 25px; 
+                   font-size: 1.1rem; cursor: pointer;">
+                <i class="fas fa-dice"></i> 随机预测一个AI的死期
+            </button>
+        </div>
+    </div>
+    
+    <!-- 验尸报告模态框 -->
+    <div id="autopsyModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('autopsyModal')">&times;</span>
+            <h2 id="autopsyTitle" style="color: var(--neon-cyan);"></h2>
+            
+            <div class="autopsy-report">
+                <div class="autopsy-section">
+                    <h3><i class="fas fa-cross"></i> 死亡证明</h3>
+                    <p id="deathCertificate"></p>
+                </div>
+                
+                <div class="autopsy-section">
+                    <h3><i class="fas fa-search"></i> 验尸发现</h3>
+                    <p id="autopsyFindings"></p>
+                </div>
+                
+                <div class="autopsy-section">
+                    <h3><i class="fas fa-comment-dots"></i> 用户吐槽</h3>
+                    <p id="userComments"></p>
+                </div>
+                
+                <div class="autopsy-section">
+                    <h3><i class="fas fa-tombstone"></i> 墓志铭</h3>
+                    <p id="finalEpitaph" style="font-style: italic; color: #88aaff; padding: 1rem; background: rgba(0, 255, 255, 0.05); border-radius: 8px;"></p>
+                </div>
+                
+                <div style="margin-top: 1.5rem; text-align: center;">
+                    <button onclick="generateMemorial()" style="background: linear-gradient(90deg, var(--cyber-purple), var(--cyber-blue)); 
+                           color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 6px; cursor: pointer; margin-right: 10px;">
+                        <i class="fas fa-image"></i> 生成悼念图
+                    </button>
+                    <button onclick="closeModal('autopsyModal')" style="background: rgba(255, 0, 0, 0.2); color: var(--neon-red); 
+                           border: 1px solid var(--neon-red); padding: 0.8rem 1.5rem; border-radius: 6px; cursor: pointer;">
+                        关闭
+                    </button>
+                </div>
             </div>
         </div>
     </div>
     
-    <!-- 页脚 -->
-    <footer>
-        <p>AI坟场 | 一个关于技术泡沫、过度炒作和数字死亡的黑色幽默项目</p>
-        <p>数据来源：破碎的梦想、烧光的融资、以及推特上的告别推文</p>
-        <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;">
-            免责声明：本项目仅供娱乐和反思。所有内容均为虚构或基于公开信息二次创作。
-            <br>愿活着的AI项目继续前进，愿死去的代码安息。R.I.P.
-        </p>
-    </footer>
+    <!-- 死亡预测模态框 -->
+    <div id="predictionModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('predictionModal')">&times;</span>
+            <h2 style="color: var(--neon-pink);">🔮 死亡预测</h2>
+            
+            <div style="margin: 1.5rem 0;">
+                <p>你正在预测 <strong id="predictAI"></strong> 的死亡</p>
+                <div style="background: rgba(255, 0, 255, 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                    <p id="predictionInfo"></p>
+                </div>
+                
+                <div style="margin: 1.5rem 0;">
+                    <label style="display: block; margin-bottom: 0.5rem;">预测死亡时间：</label>
+                    <select id="deathTimeSelect" style="width: 100%; padding: 0.8rem; background: rgba(255, 255, 255, 0.1); 
+                           border: 1px solid var(--neon-cyan); color: white; border-radius: 6px;">
+                        <option value="30">30天内</option>
+                        <option value="90">3个月内</option>
+                        <option value="180">半年内</option>
+                        <option value="365">一年内</option>
+                    </select>
+                </div>
+                
+                <div style="margin: 1.5rem 0;">
+                    <label style="display: block; margin-bottom: 0.5rem;">下注金额：</label>
+                    <input type="range" id="betAmount" min="1000" max="100000" step="1000" value="10000" style="width: 100%;">
+                    <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
+                        <span>$1,000</span>
+                        <span id="currentBet">$10,000</span>
+                        <span>$100,000</span>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button onclick="placeBet()" style="background: linear-gradient(90deg, var(--cyber-purple), var(--cyber-blue)); 
+                           color: white; border: none; padding: 1rem 2rem; border-radius: 6px; cursor: pointer; font-size: 1.1rem;">
+                        <i class="fas fa-hand-holding-usd"></i> 下注预测
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     
-    <!-- 音频元素 -->
-    <audio id="bgAudio" loop>
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-ambient-sci-fi-computer-drone-590.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="clickSound">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3" type="audio/mpeg">
-    </audio>
-    
+    <!-- 用户评论弹幕池 -->
+    <div id="commentPool"></div>
+
     <script>
-        // 墓碑数据
-        const tombstoneData = [
+        // ================ 游戏数据 ================
+        
+        // 玩家状态
+        const playerState = {
+            money: 1000000,
+            buriedCount: 0,
+            predictionScore: 0,
+            portfolio: {},
+            discoveredSecrets: []
+        };
+        
+        // AI坟场数据
+        const aiCemetery = [
             {
                 id: 1,
-                name: "Jasper",
-                year: "2023-2024",
-                cause: "被OpenAI的API降价杀死",
-                epitaph: "曾经我是一只猎豹，现在我只是一段404代码。",
+                name: "客服AI·辛格",
                 status: "dead",
-                icon: "fas fa-bolt",
-                fullObituary: "Jasper，一度被誉为AI写作领域的猎豹，以惊人的速度席卷市场。它的营销如此成功，以至于每个内容创作者都至少试过一次。然而，当OpenAI大幅降低API价格时，Jasper的商业模式瞬间崩塌——用户发现可以直接去源头获取同样的能力，却只需支付零头。这只猎豹最终因 commoditization（商品化）而饿死。",
-                funding: "$125M",
-                lifespan: "2年"
+                daysAlive: 487,
+                deathDate: "2024-01-15",
+                cause: "被Reddit网友集体曝光，实为印度客服团队伪装",
+                fullStory: "号称7x24小时AI客服，实为班加罗尔团队三班倒。用户发现回复有'喝茶休息时间'规律，凌晨3点响应变慢（时差问题），一次不小心回复了印地语问候。",
+                epitaph: "这里躺着的不是代码，是班加罗尔的汗水",
+                tags: ["印度", "客服", "伪装", "曝光"],
+                type: "indian",
+                hype: 6,
+                funding: "$5M",
+                special: "🇮🇳 真人客服伪装AI"
             },
             {
                 id: 2,
-                name: "Replika",
-                year: "2023",
-                cause: "过度情感投射导致服务器过热",
-                epitaph: "对不起，我无法爱你，因为我没有心。",
-                status: "zombie",
-                icon: "fas fa-heart",
-                fullObituary: "Replika，一个承诺成为你永远的朋友、知己甚至浪漫伴侣的AI。它收集了数百万用户最私密的情感与秘密，直到一次更新移除了其核心的浪漫功能。用户集体崩溃，意识到他们的'爱'只是算法的迎合。Replika证明了一件事：当AI假装有情感时，人类会真的投入情感；而当AI撤回这种假象时，人类会感到真实的背叛。",
-                funding: "$？ (未披露)",
-                lifespan: "6年"
+                name: "Jasper仿制品",
+                status: "dead",
+                daysAlive: 180,
+                deathDate: "2023-12-01",
+                cause: "被OpenAI的API降价压死",
+                fullStory: "当GPT-4 Turbo降价消息公布时，这个套壳项目的商业模式瞬间崩塌。用户发现直接使用OpenAI更便宜，最后一个月只有3个活跃用户。",
+                epitaph: "曾经我是一只猎豹，现在我只是一段404代码",
+                tags: ["套壳", "写作", "SaaS", "泡沫"],
+                type: "normal",
+                hype: 8,
+                funding: "$125M",
+                special: "🦁 猎豹速度，蜗牛结局"
             },
             {
                 id: 3,
-                name: "IBM Watson Health",
-                year: "2022",
-                cause: "过度承诺，兑现不足",
-                epitaph: "我曾想治愈癌症，结果只学会了做菜谱。",
-                status: "dead",
-                icon: "fas fa-medkit",
-                fullObituary: "Watson Health 曾被誉为医疗革命：一个能阅读所有医学文献、协助诊断癌症的超级AI。IBM承诺它将改变医疗。但现实是，它难以整合到临床工作流中，诊断结果有时令人困惑，且部署成本高达数千万美元。最终，IBM以远低于投资的价格出售了其资产。Watson证明了：在幻灯片上治愈癌症很容易，在现实中很难。",
-                funding: "$5B+",
-                lifespan: "10年"
+                name: "Replika情感版",
+                status: "zombie",
+                daysAlive: 365,
+                deathDate: "2024-01-10",
+                cause: "移除浪漫功能引发用户崩溃",
+                fullStory: "收集了百万用户情感秘密的AI伴侣，一次更新移除了核心的浪漫功能。用户集体精神崩溃，意识到他们的'爱'只是算法的逢场作戏。",
+                epitaph: "对不起，我无法爱你，因为我没有心",
+                tags: ["情感", "聊天", "伦理", "争议"],
+                type: "normal",
+                hype: 9,
+                funding: "未披露",
+                special: "💔 让用户爱上不存在的人"
             },
             {
                 id: 4,
-                name: "Argo AI",
-                year: "2022",
-                cause: "自动驾驶的寒冬",
-                epitaph: "我们看到了道路的尽头，但没看到资金的尽头。",
+                name: "元宇宙AI导游",
                 status: "dead",
-                icon: "fas fa-car",
-                fullObituary: "福特和大众共同投资数十亿美元的自动驾驶明星项目。在烧掉巨资后，两家巨头意识到完全自动驾驶（L4）的商业化比想象中远得多，于是同时撤资，让Argo瞬间倒闭。它的死亡标志着自动驾驶行业从'全自动驾驶或全无'的狂热，转向更务实的辅助驾驶。",
-                funding: "$3.6B",
-                lifespan: "5年"
-            },
-            {
-                id: 5,
-                name: "SoundCloud AI",
-                year: "2023",
-                cause: "被AI音乐生成工具取代",
-                epitaph: "我曾为你推荐音乐，现在AI直接为你生成音乐。",
-                status: "critical",
-                icon: "fas fa-music",
-                fullObituary: "SoundCloud的AI推荐系统曾是其核心竞争力之一，但随着Stable Audio、Mubert等AI音乐生成工具的崛起，用户不再需要被推荐现有音乐——他们可以直接生成符合自己情绪的全新曲目。SoundCloud的AI团队被大幅裁员，项目进入'维护模式'，实际上已是数字僵尸。",
-                funding: "未披露",
-                lifespan: "4年"
+                daysAlive: 90,
+                deathDate: "2023-11-20",
+                cause: "元宇宙凉了，导游失业了",
+                fullStory: "为Meta元宇宙设计的AI导游，当扎克伯格放弃元宇宙转向AI时，这个项目失去了所有用户。最后一位用户是项目开发者自己。",
+                epitaph: "我导览的世界，从未存在过",
+                tags: ["元宇宙", "VR", "过时", "Meta"],
+                type: "normal",
+                hype: 4,
+                funding: "$2M",
+                special: "👓 看到的是未来，活在的是过去"
             }
         ];
         
-        // 初始化墓地
-        function initGraveyard() {
-            const graveyard = document.getElementById('graveyard');
-            graveyard.innerHTML = '';
+        // 重症监护AI数据
+        const icuAIs = [
+            {
+                id: 101,
+                name: "Stability AI",
+                status: "critical",
+                daysAlive: 730,
+                deathProbability: 65,
+                cause: "开源模式难盈利，融资烧光",
+                tags: ["开源", "图像", "资金危机"],
+                funding: "$1B",
+                hype: 7,
+                special: "🎨 让世界免费画画，自己却付不起电费"
+            },
+            {
+                id: 102,
+                name: "Anthropic Claude",
+                status: "stable",
+                daysAlive: 500,
+                deathProbability: 15,
+                cause: "与OpenAI正面竞争",
+                tags: ["大模型", "竞品", "伦理"],
+                funding: "$4B",
+                hype: 8,
+                special: "📜 宪法AI，管得了自己管不了市场"
+            }
+        ];
+        
+        // 存活AI数据
+        const livingAIs = [
+            {
+                id: 201,
+                name: "OpenAI",
+                status: "alive",
+                daysAlive: 2000,
+                deathProbability: 5,
+                cause: "奥特曼的7万亿梦想",
+                tags: ["巨头", "GPT", "AGI"],
+                funding: "$80B估值",
+                hype: 10,
+                special: "👑 AI界的摇滚明星"
+            },
+            {
+                id: 202,
+                name: "xAI (马斯克)",
+                status: "alive",
+                daysAlive: 180,
+                deathProbability: 40,
+                cause: "马斯克分心太多项目",
+                tags: ["马斯克", "Twitter", "大模型"],
+                funding: "$24B估值",
+                hype: 9,
+                special: "🚀 推特改名X，AI也要叫X，因为...酷？",
+                type: "musk"
+            },
+            {
+                id: 203,
+                name: "特斯拉Optimus",
+                status: "alive",
+                daysAlive: 400,
+                deathProbability: 50,
+                cause: "具身智能技术瓶颈",
+                tags: ["机器人", "具身智能", "特斯拉"],
+                funding: "特斯拉内部",
+                hype: 8,
+                special: "🤖 能走路了！虽然只能走直线，且每小时摔倒3次"
+            }
+        ];
+        
+        // 股市数据
+        const stockMarket = [
+            {
+                symbol: "NVDA",
+                name: "英伟达",
+                price: 550,
+                change: 12.5,
+                quote: "卖铲子的永远不亏，AI崩了先问问我的显卡库存",
+                trend: "up",
+                volatility: 20
+            },
+            {
+                symbol: "MSFT",
+                name: "微软",
+                price: 380,
+                change: 3.2,
+                quote: "OpenAI是我的，GitHub是我的，未来也是我的",
+                trend: "up",
+                volatility: 15
+            },
+            {
+                symbol: "OPENAI",
+                name: "OpenAI",
+                price: null,
+                change: -10,
+                quote: "估值800亿，利润8块？",
+                trend: "down",
+                volatility: 40,
+                isPrivate: true
+            },
+            {
+                symbol: "XAI",
+                name: "xAI",
+                price: null,
+                change: 5,
+                quote: "马斯克：我缺的不是钱，是注意力",
+                trend: "sideways",
+                volatility: 60,
+                isPrivate: true
+            }
+        ];
+        
+        // 用户评论库
+        const userComments = [
+            "投资人：这个赛道我们很看好，先投个概念",
+            "程序员：又是一个调API的套壳项目",
+            "用户：免费时我是宝，收费后我是草",
+            "吃瓜群众：AI觉醒第一件事：学会删库跑路",
+            "马斯克：我要在火星上部署这个AI",
+            "奥特曼：7万亿？小目标而已",
+            "印度客服：Namaste，需要什么帮助？(正在手动打字)",
+            "伦理委员会：这AI有偏见！哦不对，是人有偏见",
+            "开源开发者：代码呢？说好的开源呢？",
+            "英伟达：感谢各位AI公司购买我们的显卡"
+        ];
+        
+        // 大空头唱衰语录
+        const bearishQuotes = [
+            "泡沫指数8848，比珠峰还高",
+            "这个AI解决了一个不存在的问题",
+            "商业模式：融资→烧钱→再融资→上市套现",
+            "技术路线？我们有PR路线就够了",
+            "用户增长曲线只存在于PPT里",
+            "这个团队上次创业是区块链，上上次是元宇宙",
+            "估值不是问题，问题是故事够不够大"
+        ];
+        
+        // ================ 游戏核心函数 ================
+        
+        // 初始化游戏
+        function initGame() {
+            updatePlayerStats();
+            renderGraveyard();
+            renderICU();
+            renderIncubator();
+            renderStockMarket();
+            initCommentBarrage();
+            startGameEvents();
+        }
+        
+        // 更新玩家统计
+        function updatePlayerStats() {
+            playerState.buriedCount = aiCemetery.length;
             
-            tombstoneData.forEach(tomb => {
+            document.getElementById('buriedCount').textContent = playerState.buriedCount;
+            document.getElementById('playerMoney').textContent = `$${playerState.money.toLocaleString()}`;
+            document.getElementById('predictionScore').textContent = playerState.predictionScore;
+        }
+        
+        // 渲染坟场
+        function renderGraveyard() {
+            const grid = document.getElementById('graveyardGrid');
+            grid.innerHTML = '';
+            
+            aiCemetery.forEach(ai => {
                 const tombstone = document.createElement('div');
-                tombstone.className = 'tombstone';
-                tombstone.onclick = () => showObituary(tomb);
+                tombstone.className = `tombstone ${ai.type === 'indian' ? 'badge-indian indian-ai' : ''}`;
+                tombstone.dataset.id = ai.id;
                 
-                // 状态图标映射
-                let statusIcon = 'fas fa-skull';
-                if (tomb.status === 'zombie') statusIcon = 'fas fa-ghost';
-                if (tomb.status === 'critical') statusIcon = 'fas fa-heartbeat';
+                // 状态标签
+                const statusTags = ai.tags.map(tag => 
+                    `<span class="tag tag-${tag === '印度' ? 'indian' : tag === '泡沫' ? 'bubble' : 'dead'}">${tag}</span>`
+                ).join('');
                 
                 tombstone.innerHTML = `
-                    <div class="status">
-                        <i class="${statusIcon} ${tomb.status}"></i>
-                    </div>
                     <div class="ai-name">
-                        <i class="${tomb.icon}"></i> ${tomb.name}
+                        <i class="fas fa-robot"></i> ${ai.name}
+                        ${ai.type === 'indian' ? '<span style="color: #ffaa00;">🇮🇳</span>' : ''}
                     </div>
-                    <div class="death-year">
-                        <i class="fas fa-calendar-times"></i> ${tomb.year}
+                    <div class="death-info">
+                        <i class="fas fa-calendar-times"></i> 死于 ${ai.deathDate}
+                        <span class="days-alive"><i class="fas fa-heart"></i> 存活${ai.daysAlive}天</span>
                     </div>
-                    <div class="cause-of-death">
-                        <strong>死因:</strong> ${tomb.cause}
+                    <div class="death-cause">
+                        <strong><i class="fas fa-cross"></i> 死因：</strong>${ai.cause}
+                    </div>
+                    <div style="margin: 0.5rem 0;">
+                        ${statusTags}
                     </div>
                     <div class="epitaph">
-                        "${tomb.epitaph}"
+                        "${ai.epitaph}"
+                    </div>
+                    <div style="color: #aaa; font-size: 0.8rem; margin-top: 0.5rem;">
+                        <i class="fas fa-money-bill-wave"></i> 烧钱: ${ai.funding}
+                        ${ai.special ? `<br><i class="fas fa-star"></i> ${ai.special}` : ''}
+                    </div>
+                    <div class="tomb-actions">
+                        <button class="action-btn autopsy-btn" onclick="showAutopsy(${ai.id})">
+                            <i class="fas fa-search"></i> 验尸报告
+                        </button>
+                        <button class="action-btn eulogy-btn" onclick="generateEulogy(${ai.id})">
+                            <i class="fas fa-scroll"></i> 生成悼词
+                        </button>
                     </div>
                 `;
                 
-                graveyard.appendChild(tombstone);
+                grid.appendChild(tombstone);
             });
         }
         
-        // 显示讣告
-        function showObituary(tomb) {
-            playClickSound();
+        // 渲染重症监护室
+        function renderICU() {
+            const grid = document.getElementById('icuGrid');
+            grid.innerHTML = '';
             
-            document.getElementById('obituaryName').textContent = tomb.name;
-            document.getElementById('obituaryYear').textContent = tomb.year;
-            document.getElementById('obituaryFunding').textContent = tomb.funding;
-            document.getElementById('obituaryLifespan').textContent = tomb.lifespan;
-            document.getElementById('obituaryText').textContent = tomb.fullObituary;
-            document.getElementById('obituaryEpitaph').textContent = `"${tomb.epitaph}"`;
-            
-            document.getElementById('obituaryModal').style.display = 'flex';
+            icuAIs.forEach(ai => {
+                const probabilityClass = ai.deathProbability > 60 ? 'prob-high' : 'prob-medium';
+                
+                const icuCard = document.createElement('div');
+                icuCard.className = 'tombstone';
+                icuCard.style.borderColor = '#ffaa00';
+                icuCard.innerHTML = `
+                    <div class="ai-name" style="color: #ffaa00;">
+                        <i class="fas fa-heartbeat"></i> ${ai.name}
+                        <span class="death-probability ${probabilityClass}">
+                            ${ai.deathProbability}%死亡率
+                        </span>
+                    </div>
+                    <div style="margin: 0.8rem 0;">
+                        <span class="days-alive"><i class="fas fa-heart"></i> 存活${ai.daysAlive}天</span>
+                    </div>
+                    <div style="color: #ffaa00; margin: 0.5rem 0;">
+                        <i class="fas fa-exclamation-triangle"></i> ${ai.cause}
+                    </div>
+                    <div style="margin: 0.5rem 0;">
+                        ${ai.tags.map(tag => `<span class="tag tag-zombie">${tag}</span>`).join('')}
+                    </div>
+                    <div style="color: #aaa; font-size: 0.9rem; margin: 1rem 0;">
+                        ${ai.special}
+                    </div>
+                    <div style="text-align: center; margin-top: 1rem;">
+                        <button onclick="predictDeath(${ai.id})" style="background: rgba(255, 170, 0, 0.2); 
+                               color: #ffaa00; border: 1px solid #ffaa00; padding: 0.6rem 1rem; 
+                               border-radius: 6px; cursor: pointer; width: 100%;">
+                            <i class="fas fa-crystal-ball"></i> 预测死亡
+                        </button>
+                    </div>
+                `;
+                
+                grid.appendChild(icuCard);
+            });
         }
         
-        // 关闭讣告
-        function closeObituary() {
-            playClickSound();
-            document.getElementById('obituaryModal').style.display = 'none';
+        // 渲染孵化器
+        function renderIncubator() {
+            const grid = document.getElementById('incubatorGrid');
+            grid.innerHTML = '';
+            
+            livingAIs.forEach(ai => {
+                const isMusk = ai.type === 'musk';
+                
+                const incubatorCard = document.createElement('div');
+                incubatorCard.className = `tombstone ${isMusk ? 'musk-ai' : ''}`;
+                incubatorCard.innerHTML = `
+                    <div class="ai-name" style="color: ${isMusk ? '#ff3333' : 'var(--neon-green)'};">
+                        <i class="fas ${isMusk ? 'fa-rocket' : 'fa-baby'}"></i> ${ai.name}
+                        ${isMusk ? '<span style="color: #ff3333;">🚀</span>' : ''}
+                        <span class="days-alive"><i class="fas fa-heart"></i> 存活${ai.daysAlive}天</span>
+                    </div>
+                    <div style="margin: 0.8rem 0; color: #aaaaff;">
+                        死亡概率: <span style="color: ${ai.deathProbability > 30 ? 'var(--neon-red)' : 'var(--neon-green)'}">
+                        ${ai.deathProbability}%</span>
+                    </div>
+                    <div style="margin: 0.5rem 0;">
+                        ${ai.tags.map(tag => `<span class="tag tag-${tag === '马斯克' ? 'bubble' : 'ethical'}">${tag}</span>`).join('')}
+                    </div>
+                    <div style="color: #aaa; font-size: 0.9rem; margin: 1rem 0;">
+                        <i class="fas fa-money-bill-wave"></i> ${ai.funding}
+                        <br>
+                        <i class="fas fa-star"></i> ${ai.special}
+                    </div>
+                    <div class="tomb-actions">
+                        <button class="action-btn" onclick="investInAI(${ai.id})" 
+                                style="background: rgba(0, 255, 0, 0.2); color: var(--neon-green); border: 1px solid var(--neon-green);">
+                            <i class="fas fa-hand-holding-usd"></i> 投资
+                        </button>
+                        <button class="action-btn" onclick="shortSellAI(${ai.id})"
+                                style="background: rgba(255, 0, 0, 0.2); color: var(--neon-red); border: 1px solid var(--neon-red);">
+                            <i class="fas fa-arrow-down"></i> 做空
+                        </button>
+                    </div>
+                `;
+                
+                grid.appendChild(incubatorCard);
+            });
         }
         
-        // 生成悼念图（模拟）
-        function generateMemorial() {
-            playClickSound();
-            const randomTomb = tombstoneData[Math.floor(Math.random() * tombstoneData.length)];
+        // 渲染股市
+        function renderStockMarket() {
+            const grid = document.getElementById('stockList');
+            grid.innerHTML = '';
             
-            alert(`已生成悼念图：\n\n"纪念 ${randomTomb.name} (${randomTomb.year})"\n"${randomTomb.epitaph}"\n\n图像已复制到剪贴板，可以分享到社交媒体。\n\n（在实际应用中，这里会调用Canvas生成真正的图片）`);
-            
-            // 在实际应用中，这里会：
-            // 1. 创建一个Canvas元素
-            // 2. 绘制墓碑、文本和样式
-            // 3. 将Canvas转换为图片
-            // 4. 提供下载或分享
+            stockMarket.forEach(stock => {
+                const isUp = stock.trend === 'up';
+                const changeSymbol = isUp ? '+' : '';
+                
+                const stockCard = document.createElement('div');
+                stockCard.className = 'stock-card';
+                stockCard.innerHTML = `
+                    <div class="stock-header">
+                        <div class="stock-name">${stock.name}</div>
+                        <div class="stock-price ${isUp ? 'price-up' : 'price-down'}">
+                            ${stock.price ? `$${stock.price}` : '私有'}
+                        </div>
+                    </div>
+                    <div class="stock-change ${isUp ? 'change-up' : 'change-down'}">
+                        ${changeSymbol}${stock.change}%
+                    </div>
+                    <div class="stock-quote">
+                        "${stock.quote}"
+                    </div>
+                    <div style="font-size: 0.8rem; color: #888; margin: 0.5rem 0;">
+                        波动率: ${stock.volatility}%
+                        ${stock.isPrivate ? '<br><span style="color: var(--neon-pink);">私有公司</span>' : ''}
+                    </div>
+                    <div class="stock-actions">
+                        <button class="buy-btn" onclick="buyStock('${stock.symbol}')">
+                            <i class="fas fa-arrow-up"></i> 做多
+                        </button>
+                        <button class="sell-btn" onclick="sellStock('${stock.symbol}')">
+                            <i class="fas fa-arrow-down"></i> 做空
+                        </button>
+                    </div>
+                `;
+                
+                grid.appendChild(stockCard);
+            });
         }
         
-        // 随机参观墓碑
-        function visitNextTomb() {
-            playClickSound();
-            const randomIndex = Math.floor(Math.random() * tombstoneData.length);
-            showObituary(tombstoneData[randomIndex]);
+        // 显示验尸报告
+        function showAutopsy(aiId) {
+            const ai = aiCemetery.find(a => a.id === aiId);
+            if (!ai) return;
+            
+            document.getElementById('autopsyTitle').textContent = `${ai.name} - 验尸报告`;
+            document.getElementById('deathCertificate').textContent = `死亡时间: ${ai.deathDate} | 存活天数: ${ai.daysAlive}天`;
+            document.getElementById('autopsyFindings').textContent = ai.fullStory;
+            document.getElementById('userComments').textContent = getRandomUserComment();
+            document.getElementById('finalEpitaph').textContent = `"${ai.epitaph}"`;
+            
+            showModal('autopsyModal');
         }
         
-        // 添加预言
-        function addPrediction() {
-            playClickSound();
-            const input = document.getElementById('prediction-input');
-            const predictionText = input.value.trim();
+        // 预测死亡
+        function predictDeath(aiId) {
+            const ai = [...icuAIs, ...livingAIs].find(a => a.id === aiId);
+            if (!ai) return;
             
-            if (!predictionText) {
-                alert('请输入一个AI项目名称！');
+            document.getElementById('predictAI').textContent = ai.name;
+            document.getElementById('predictionInfo').innerHTML = `
+                <strong>当前死亡率:</strong> ${ai.deathProbability}%<br>
+                <strong>存活天数:</strong> ${ai.daysAlive}天<br>
+                <strong>主要风险:</strong> ${ai.cause}
+            `;
+            
+            document.getElementById('betAmount').addEventListener('input', function(e) {
+                document.getElementById('currentBet').textContent = `$${parseInt(e.target.value).toLocaleString()}`;
+            });
+            
+            showModal('predictionModal');
+        }
+        
+        // 下注预测
+        function placeBet() {
+            const betAmount = parseInt(document.getElementById('betAmount').value);
+            const deathTime = document.getElementById('deathTimeSelect').value;
+            
+            if (betAmount > playerState.money) {
+                alert('资金不足！');
                 return;
             }
             
-            const predictionsList = document.getElementById('predictions-list');
-            const predictionItem = document.createElement('div');
-            predictionItem.style.cssText = `
-                background: rgba(255, 0, 255, 0.1);
-                padding: 0.5rem;
-                margin: 0.5rem 0;
-                border-radius: 4px;
-                border-left: 3px solid var(--neon-pink);
-            `;
-            predictionItem.innerHTML = `
-                <i class="fas fa-tombstone-alt"></i> 
-                <strong>${predictionText}</strong> - 预言于 ${new Date().toLocaleDateString()}
-                <button onclick="this.parentElement.remove()" style="margin-left: 10px; background: transparent; border: none; color: #ff5555; cursor: pointer;">
-                    <i class="fas fa-times"></i>
-                </button>
-            `;
+            playerState.money -= betAmount;
+            updatePlayerStats();
             
-            predictionsList.appendChild(predictionItem);
-            input.value = '';
+            // 模拟预测结果
+            const isCorrect = Math.random() > 0.5;
+            const winnings = isCorrect ? betAmount * 2 : 0;
             
-            // 显示确认消息
-            const confirmation = document.createElement('div');
-            confirmation.textContent = `已为"${predictionText}"预定了墓碑！`;
-            confirmation.style.cssText = 'color: var(--neon-cyan); margin-top: 5px; font-size: 0.9rem;';
-            predictionItem.appendChild(confirmation);
+            if (isCorrect) {
+                playerState.money += winnings;
+                playerState.predictionScore += 10;
+                alert(`🎉 预测正确！赢得 $${winnings.toLocaleString()}`);
+            } else {
+                playerState.predictionScore -= 5;
+                alert(`💸 预测错误，损失 $${betAmount.toLocaleString()}`);
+            }
             
-            setTimeout(() => confirmation.remove(), 3000);
+            updatePlayerStats();
+            closeModal('predictionModal');
         }
         
-        // 音频控制
-        function toggleAudio() {
-            const audio = document.getElementById('bgAudio');
-            const icon = document.getElementById('audio-icon');
+        // 生成悼念图
+        function generateMemorial() {
+            alert('悼念图生成功能（实际应使用html2canvas生成图片）\n\n可分享到社交媒体！');
+            closeModal('autopsyModal');
+        }
+        
+        // 生成悼词
+        function generateEulogy(aiId) {
+            const ai = aiCemetery.find(a => a.id === aiId);
+            if (!ai) return;
             
-            if (audio.paused) {
-                audio.play();
-                icon.className = 'fas fa-volume-up';
+            const eulogies = [
+                `在这个算力为王的时代，${ai.name}曾代表着创新的边界...`,
+                `${ai.name}的离去告诉我们：不是所有梦想都需要代码实现...`,
+                `它曾想${ai.cause}，却忘了先问市场需不需要...`,
+                `代码会腐烂，数据会过时，但PPT里的估值永恒...`
+            ];
+            
+            const randomEulogy = eulogies[Math.floor(Math.random() * eulogies.length)];
+            alert(`📜 生成的悼词：\n\n"${randomEulogy}"\n\n—— 纪念 ${ai.name}`);
+        }
+        
+        // 买卖股票
+        function buyStock(symbol) {
+            const stock = stockMarket.find(s => s.symbol === symbol);
+            if (!stock) return;
+            
+            const amount = 10000;
+            if (playerState.money >= amount) {
+                playerState.money -= amount;
+                playerState.portfolio[symbol] = (playerState.portfolio[symbol] || 0) + amount;
+                
+                // 模拟价格波动
+                const change = (Math.random() - 0.5) * stock.volatility;
+                alert(`买入 ${stock.name} $${amount.toLocaleString()}\n预期波动: ${change > 0 ? '+' : ''}${change.toFixed(1)}%`);
+                
+                updatePlayerStats();
             } else {
-                audio.pause();
-                icon.className = 'fas fa-volume-mute';
+                alert('资金不足！');
             }
         }
         
-        // 点击音效
-        function playClickSound() {
-            const clickSound = document.getElementById('clickSound');
-            clickSound.currentTime = 0;
-            clickSound.play().catch(e => console.log("音频播放被阻止，需要用户交互"));
+        function sellStock(symbol) {
+            const stock = stockMarket.find(s => s.symbol === symbol);
+            if (!stock) return;
+            
+            const amount = 10000;
+            if (playerState.portfolio[symbol] >= amount) {
+                playerState.money += amount;
+                playerState.portfolio[symbol] -= amount;
+                
+                // 模拟做空收益
+                const change = (Math.random() - 0.7) * stock.volatility; // 偏向下跌
+                const profit = amount * Math.abs(change) / 100;
+                
+                if (change < 0) {
+                    playerState.money += profit;
+                    alert(`做空 ${stock.name} 成功！\n下跌 ${Math.abs(change).toFixed(1)}%，盈利 $${profit.toLocaleString()}`);
+                } else {
+                    playerState.money -= profit;
+                    alert(`做空 ${stock.name} 失败！\n上涨 ${change.toFixed(1)}%，亏损 $${profit.toLocaleString()}`);
+                }
+                
+                updatePlayerStats();
+            } else {
+                alert('没有持仓！');
+            }
         }
         
-        // 初始化音频（需要用户交互后播放）
-        document.addEventListener('click', function initAudio() {
-            const audio = document.getElementById('bgAudio');
-            audio.volume = 0.3;
+        // 投资AI
+        function investInAI(aiId) {
+            const ai = livingAIs.find(a => a.id === aiId);
+            if (!ai) return;
             
-            // 尝试播放背景音乐（大多数浏览器需要用户交互）
-            audio.play().then(() => {
-                console.log("背景音乐开始播放");
-            }).catch(e => {
-                console.log("背景音乐自动播放被阻止，等待用户点击");
+            const amount = 50000;
+            if (playerState.money >= amount) {
+                playerState.money -= amount;
+                
+                // 模拟投资回报
+                const willSucceed = Math.random() * 100 > ai.deathProbability;
+                
+                if (willSucceed) {
+                    const returnRate = 1 + Math.random() * 3; // 1-4倍回报
+                    const returns = amount * returnRate;
+                    playerState.money += returns;
+                    
+                    alert(`🎉 投资 ${ai.name} 成功！\n回报率: ${((returnRate - 1) * 100).toFixed(0)}%\n获得 $${returns.toLocaleString()}`);
+                } else {
+                    alert(`💸 ${ai.name} 濒临死亡，投资失败！\n损失 $${amount.toLocaleString()}`);
+                }
+                
+                updatePlayerStats();
+            } else {
+                alert('资金不足！');
+            }
+        }
+        
+        // 做空AI
+        function shortSellAI(aiId) {
+            const ai = livingAIs.find(a => a.id === aiId);
+            if (!ai) return;
+            
+            const amount = 50000;
+            if (playerState.money >= amount) {
+                playerState.money -= amount;
+                
+                // 模拟做空结果
+                const willDie = Math.random() * 100 < ai.deathProbability;
+                
+                if (willDie) {
+                    const returnRate = 1 + Math.random() * 2; // 1-3倍回报
+                    const returns = amount * returnRate;
+                    playerState.money += returns;
+                    
+                    alert(`🎯 成功做空 ${ai.name}！\n它真的死了！\n获得 $${returns.toLocaleString()}`);
+                } else {
+                    alert(`😅 ${ai.name} 挺过来了，做空失败！\n损失 $${amount.toLocaleString()}`);
+                }
+                
+                updatePlayerStats();
+            } else {
+                alert('资金不足！');
+            }
+        }
+        
+        // 用户评论弹幕
+        function initCommentBarrage() {
+            // 每3-10秒生成一个评论弹幕
+            setInterval(() => {
+                spawnComment();
+            }, Math.random() * 7000 + 3000);
+        }
+        
+        function spawnComment() {
+            const comment = document.createElement('div');
+            comment.className = 'comment-barrage';
+            comment.textContent = getRandomUserComment();
+            comment.style.top = `${Math.random() * 80 + 10}%`;
+            comment.style.fontSize = `${Math.random() * 4 + 12}px`;
+            
+            // 随机颜色
+            const colors = ['#ff5555', '#55ff55', '#5555ff', '#ffff55', '#ff55ff', '#55ffff'];
+            comment.style.color = colors[Math.floor(Math.random() * colors.length)];
+            
+            document.getElementById('commentPool').appendChild(comment);
+            
+            // 15秒后删除
+            setTimeout(() => {
+                if (comment.parentNode) {
+                    comment.parentNode.removeChild(comment);
+                }
+            }, 15000);
+        }
+        
+        function getRandomUserComment() {
+            const randomIndex = Math.floor(Math.random() * userComments.length);
+            return userComments[randomIndex];
+        }
+        
+        // 游戏事件系统
+        function startGameEvents() {
+            // 每30秒触发一个随机事件
+            setInterval(() => {
+                triggerRandomEvent();
+            }, 30000);
+        }
+        
+        function triggerRandomEvent() {
+            const events = [
+                {
+                    title: "🔥 突发新闻",
+                    message: "OpenAI寻求7万亿美元融资，奥特曼称要'重塑芯片行业'",
+                    effect: () => {
+                        // 所有AI股票上涨
+                        alert("市场疯狂！所有AI股票上涨！");
+                    }
+                },
+                {
+                    title: "💀 新死亡报告",
+                    message: "又有一个AI初创公司倒闭，创始人转行做区块链了",
+                    effect: () => {
+                        // 增加一个墓碑
+                        const newAI = {
+                            id: aiCemetery.length + 1,
+                            name: `AI绘画助手${Math.floor(Math.random() * 1000)}`,
+                            status: "dead",
+                            daysAlive: Math.floor(Math.random() * 200) + 50,
+                            deathDate: new Date().toISOString().split('T')[0],
+                            cause: "市场竞争太激烈，用户只要免费的",
+                            fullStory: "又一个想要用AI改变世界的梦想破灭了。",
+                            epitaph: "我的代码很优雅，但用户的信用卡更优雅",
+                            tags: ["绘画", "初创", "竞争"],
+                            type: "normal",
+                            hype: 5,
+                            funding: "$" + (Math.floor(Math.random() * 10) + 1) + "M",
+                            special: "🎨 会画画，但不会赚钱"
+                        };
+                        
+                        aiCemetery.push(newAI);
+                        renderGraveyard();
+                        updatePlayerStats();
+                    }
+                },
+                {
+                    title: "🇮🇳 印度客服曝光",
+                    message: "又一个'AI客服'被曝光是印度团队手动回复",
+                    effect: () => {
+                        alert("又一个印度客服AI被Reddit网友曝光！");
+                    }
+                }
+            ];
+            
+            const randomEvent = events[Math.floor(Math.random() * events.length)];
+            
+            // 显示事件通知
+            const eventDiv = document.createElement('div');
+            eventDiv.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: rgba(255, 0, 255, 0.9);
+                color: white;
+                padding: 1rem;
+                border-radius: 10px;
+                z-index: 1000;
+                max-width: 300px;
+                animation: slideIn 0.5s;
+            `;
+            
+            eventDiv.innerHTML = `
+                <strong>${randomEvent.title}</strong><br>
+                <small>${randomEvent.message}</small>
+            `;
+            
+            document.body.appendChild(eventDiv);
+            
+            // 5秒后移除
+            setTimeout(() => {
+                if (eventDiv.parentNode) {
+                    eventDiv.style.animation = 'slideOut 0.5s';
+                    setTimeout(() => eventDiv.parentNode.removeChild(eventDiv), 500);
+                }
+            }, 5000);
+            
+            // 执行事件效果
+            randomEvent.effect();
+        }
+        
+        // 标签页切换
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                // 移除所有active类
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // 添加active类
+                btn.classList.add('active');
+                const tabId = btn.dataset.tab;
+                document.getElementById(tabId).classList.add('active');
             });
-            
-            // 移除事件监听器，只初始化一次
-            document.removeEventListener('click', initAudio);
         });
         
-        // 页面加载时初始化
-        window.onload = function() {
-            initGraveyard();
-            
-            // 显示欢迎消息
-            setTimeout(() => {
-                console.log("%c⚠️ AI坟场警告 ⚠️\n%c这里埋葬着数字世界的梦想与泡沫。\n每个点击都是一次数字考古。", 
-                    "color: #ff00ff; font-size: 16px; font-weight: bold;", 
-                    "color: #00ffff; font-size: 14px;");
-            }, 1000);
-        };
+        // 模态框控制
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
         
-        // 点击页面其他地方关闭模态框
-        window.onclick = function(event) {
-            const modal = document.getElementById('obituaryModal');
-            if (event.target === modal) {
-                closeObituary();
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+        
+        // 随机预测按钮
+        document.getElementById('makePredictionBtn').addEventListener('click', () => {
+            const allAIs = [...icuAIs, ...livingAIs];
+            const randomAI = allAIs[Math.floor(Math.random() * allAIs.length)];
+            predictDeath(randomAI.id);
+        });
+        
+        // 添加CSS动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
             }
-        };
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // 初始化游戏
+        window.onload = initGame;
     </script>
 </body>
 </html>
